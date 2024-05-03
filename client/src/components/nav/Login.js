@@ -10,7 +10,7 @@ export default function Login (props) {
   return (
     <form method="POST" action="">
       <label htmlFor="login">Login</label> <input id="login" onChange={getLogin}/>
-      <label htmlFor="mdp">Login</label> <input id="password" type="password" onChange={getPassword}/>
+      <label htmlFor="mdp">Password</label> <input id="password" type="password" onChange={getPassword}/>
       <button type="submit">Log In</button> <button type="reset">Annuler</button>
     </form>
   )
