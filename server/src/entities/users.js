@@ -23,7 +23,7 @@ class Users {
          password: "1234",
          lastname: "chu",
          firstname: "pika"
-      }; // À remplacer par une requête bd
+      }; // TODO : À remplacer par une requête bd
 
       if(false) {
         //erreur
@@ -51,7 +51,7 @@ class Users {
 
   checkpassword(login, password) {
     return new Promise((resolve, reject) => {
-      let userid = 1; // À remplacer par une requête bd
+      let userid = 1; // TODO : À remplacer par une requête bd
       if(false) {
         //erreur
         reject();

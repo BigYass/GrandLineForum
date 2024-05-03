@@ -3,10 +3,8 @@ const Users = require("./entities/users.js");
 
 function init(db) {
     const router = express.Router();
-    // On utilise JSON
     router.use(express.json());
-    // simple logger for this router's requests
-    // all requests to this router will first hit this middleware
+    
     router.use((req, res, next) => {
         console.log('API: method %s, path %s', req.method, req.path);
         console.log('Body', req.body);
@@ -16,18 +14,18 @@ function init(db) {
     router.post("/user/login", async (req, res) => {
         try {
             const { login, password } = req.body;
-            // Erreur sur la requête HTTP
+            // HTTP request error
             if (!login || !password) {
                 res.status(400).json({
                     status: 400,
-                    "message": "Requête invalide : login et password nécessaires"
+                    "message": "Invalid Request : login and password necessary"
                 });
                 return;
             }
             if(! await users.exists(login)) {
                 res.status(401).json({
                     status: 401,
-                    message: "Utilisateur inconnu"
+                    message: "Uknown user"
                 });
                 return;
             }
@@ -38,25 +36,25 @@ function init(db) {
                     if (err) {
                         res.status(500).json({
                             status: 500,
-                            message: "Erreur interne"
+                            message: "Intern Error"
                         });
                     }
                     else {
-                        // C'est bon, nouvelle session créée
+                        // New session created
                         req.session.userid = userid;
                         res.status(200).json({
                             status: 200,
-                            message: "Login et mot de passe accepté"
+                            message: "Login and password accepted"
                         });
                     }
                 });
                 return;
             }
-            // Faux login : destruction de la session et erreur
+            // Fake Login
             req.session.destroy((err) => { });
             res.status(403).json({
                 status: 403,
-                message: "login et/ou le mot de passe invalide(s)"
+                message: "login and/or password incorrect"
             });
             return;
         }
@@ -64,8 +62,8 @@ function init(db) {
             // Toute autre erreur
             res.status(500).json({
                 status: 500,
-                message: "erreur interne",
-                details: (e || "Erreur inconnue").toString()
+                message: "Intern Error",
+                details: (e || "Uknown error").toString()
             });
         }
     });
