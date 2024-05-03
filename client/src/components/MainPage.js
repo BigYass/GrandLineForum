@@ -18,7 +18,7 @@ export default function MainPage(props) {
 
   return (
     <div>
-      {page!=="signin_page" ? 
+      {page==="signin_page" ? 
         <Signin /> 
         : <NavigationPanel login={getConnected} logout={setLogout} isConnected={isConnected}/>
       }
