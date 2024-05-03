@@ -1,24 +1,34 @@
-const path = require('path');
-const api = require('./api.js');
+const path = require('path')
+const api = require('./api.js')
 
-// Détermine le répertoire de base
-const basedir = path.normalize(path.dirname(__dirname));
-console.debug(`Base directory: ${basedir}`);
+const config = require('./conf.js')
 
-express = require('express');
+const { MongoClient } = require("mongodb")
+
+
+// Base directory
+const basedir = path.normalize(path.dirname(__dirname))
+console.debug(`Base directory: ${basedir}`)
+
+// Initialize express and express-session
+express = require('express')
 const app = express()
-const session = require("express-session");
+const session = require("express-session")
 
 app.use(session({
     secret: "ota ass knee",
     resave: true,
     saveUninitialized: false
-}));
+}))
 
-app.use('/api', api.default());
+app.use('/api', api.default())
+
+// Initiliaze mongodb
+const client = new MongoClient(config.database_url)
+
 
 // Start the server
 app.on('close', () => {
-});
-exports.default = app;
+})
+exports.default = app
 

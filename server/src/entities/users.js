@@ -1,19 +1,21 @@
+
 class Users {
   constructor(db) {
+    
     this.db = db
     // suite plus tard avec la BD
   }
 
   create(login, password, lastname, firstname) {
     return new Promise((resolve, reject) => {
-      let userid = 1; // À remplacer par une requête bd
+      let userid = 1 // À remplacer par une requête bd
       if(false) {
         //erreur
-        reject();
+        reject()
       } else {
-        resolve(userid);
+        resolve(userid)
       }
-    });
+    })
   }
 
   get(userid) {
@@ -23,45 +25,45 @@ class Users {
          password: "1234",
          lastname: "chu",
          firstname: "pika"
-      }; // TODO : À remplacer par une requête bd
+      } // TODO : À remplacer par une requête bd
 
       if(false) {
         //erreur
-        reject();
+        reject()
       } else {
         if(userid == 1) {
-          resolve(user);
+          resolve(user)
         } else {
-          resolve(null);
+          resolve(null)
         }
       }
-    });
+    })
   }
 
   async exists(login) {
     return new Promise((resolve, reject) => {
       if(false) {
         //erreur
-        reject();
+        reject()
       } else {
-        resolve(true);
+        resolve(true)
       }
-    });
+    })
   }
 
   checkpassword(login, password) {
     return new Promise((resolve, reject) => {
-      let userid = 1; // TODO : À remplacer par une requête bd
+      let userid = 1 // TODO : À remplacer par une requête bd
       if(false) {
         //erreur
-        reject();
+        reject()
       } else {
-        resolve(userid);
+        resolve(userid)
       }
-    });
+    })
   }
 
 }
 
-exports.default = Users;
+exports.default = Users
 
