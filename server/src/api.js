@@ -1,7 +1,7 @@
 const express = require("express")
 const Users = require("./entities/users.js")
 
-function init(db) {
+function init() {
   const router = express.Router()
   router.use(express.json())
 
@@ -10,7 +10,7 @@ function init(db) {
     console.log("Body", req.body)
     next()
   })
-  const users = new Users.default(db)
+  const users = new Users.default()
   router.post("/user/login", async (req, res) => {
     try {
       const { login, password } = req.body
@@ -44,6 +44,7 @@ function init(db) {
             res.status(200).json({
               status: 200,
               message: "Login and password accepted",
+              session_cookie: req.session.cookie
             })
           }
         })

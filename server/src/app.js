@@ -21,14 +21,20 @@ app.use(session({
     saveUninitialized: false
 }))
 
-app.use('/api', api.default())
 
 // Initiliaze mongodb
 const client = new MongoClient(config.database_url)
 
+client.connect()
+.then((client) => {
+  console.debug("Connecting to database : " + config.database_name)
+  app.use('/api', api.default())
+})
 
 // Start the server
 app.on('close', () => {
 })
 exports.default = app
+
+
 

@@ -1,6 +1,11 @@
 {
   "name": "server",
   "version": "1.0.0",
+
+  "scripts": {
+    "start": "node src/main.js"
+  },
+
   "main": "src/main.js",
   "license": "MIT",
   "dependencies": {

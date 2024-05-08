@@ -1,65 +1,93 @@
+const { MongoClient } = require('mongodb')
+const db = require('../db')
+
+
 
 class Users {
-  constructor(db) {
-    
-    this.db = db
-    // suite plus tard avec la BD
+  
+  constructor() {
+    this.collection_name = "users"
+    this.collection = db.db.collection(this.collection_name)
   }
 
+  /**
+   * Create a user if login doesn't exist and return the userid
+   * @param {String} login Unique login
+   * @param {String} password Password
+   * @param {String} lastname Last Name
+   * @param {String} firstname First Name
+   * @returns {Promise<number>} A Promise of the userid of the user created
+   */
   create(login, password, lastname, firstname) {
     return new Promise((resolve, reject) => {
-      let userid = 1 // À remplacer par une requête bd
-      if(false) {
-        //erreur
-        reject()
-      } else {
-        resolve(userid)
+      const query = {login: login}
+      const options = {}
+
+      const user = this.collection.find(query, options)
+        
+      if(user){
+        reject("Login " + login + " already exists")
+      }
+      else {
+        const user = {
+          login: login,
+          password: password,
+          lastname: lastname,
+          password: password,
+        }
+
+        console.log("Creating : " + login)
+
+        this.collection.insertOne(user)
       }
     })
   }
 
+  /**
+   * Get the user with his userid
+   * @param {number} userid 
+   * @returns The user 
+   */
   get(userid) {
     return new Promise((resolve, reject) => {
-      const user = {
-         login: "pikachu",
-         password: "1234",
-         lastname: "chu",
-         firstname: "pika"
-      } // TODO : À remplacer par une requête bd
+      // Search for the user in the db
+      const query = {id : userid}
+      const options = {}
 
-      if(false) {
-        //erreur
-        reject()
-      } else {
-        if(userid == 1) {
-          resolve(user)
-        } else {
-          resolve(null)
-        }
-      }
+      this.collection.find(query, options)
+        .then((user) => resolve(user))
+        .catch(() => resolve())
     })
   }
 
+  /**
+   * Search if a login is associated to a user
+   * @param {String} login Login
+   * @returns True if exist
+   */
   async exists(login) {
     return new Promise((resolve, reject) => {
-      if(false) {
-        //erreur
-        reject()
-      } else {
-        resolve(true)
-      }
+      const query = {login: login}
+      const options = {}
+
+      this.collection.find(query, options)
+        .then((_) => resolve(true))
+        .catch((err) => reject(err))
     })
   }
 
-  checkpassword(login, password) {
+  /**
+   * Check for the presence of a user, check password and gives his id if found
+   * @param {String} login 
+   * @param {String} password 
+   * @returns A Promise of the userid of the login and password combination if found
+   */
+  async checkpassword(login, password) {
     return new Promise((resolve, reject) => {
-      let userid = 1 // TODO : À remplacer par une requête bd
-      if(false) {
-        //erreur
-        reject()
-      } else {
-        resolve(userid)
-      }
+      const query = {login: login, password: password}
+      const options = {projection: {id: 1}}
+
+      const founds = this.collection.find(query, options)
     })
   }
 
