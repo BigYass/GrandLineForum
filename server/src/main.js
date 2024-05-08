@@ -1,7 +1,7 @@
-const app = require("./app.js")
+import app from "./app.js"
 const port = process.env.PORT || 4000
 
-app.default.listen(port, () => {
+app.listen(port, () => {
   console.log(`Serveur listening at port ${port}`)
 })
 

@@ -1,13 +1,13 @@
-const { MongoClient } = require('mongodb')
-const db = require('../db')
-
-
-
 class Users {
   
-  constructor() {
+  /**
+   * 
+   * @param {import('mongodb').Db} db 
+   */
+  constructor(db) {
     this.collection_name = "users"
-    this.collection = db.db.collection(this.collection_name)
+
+    this.collection = db.collection(this.collection_name)
   }
 
   /**
@@ -19,17 +19,18 @@ class Users {
    * @returns {Promise<number>} A Promise of the userid of the user created
    */
   create(login, password, lastname, firstname) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const query = {login: login}
       const options = {}
 
-      const user = this.collection.find(query, options)
+      const users = await this.collection.find(query, options).toArray()
         
-      if(user){
+      if(users.length > 0){
         reject("Login " + login + " already exists")
       }
       else {
         const user = {
+          id : users.length() + 1,
           login: login,
           password: password,
           lastname: lastname,
@@ -39,6 +40,12 @@ class Users {
         console.log("Creating : " + login)
 
         this.collection.insertOne(user)
+          .then((value) => {
+            resolve(value.insertedId)
+          })
+          .catch((err) => {
+            reject(err)
+          })
       }
     })
   }
@@ -49,14 +56,20 @@ class Users {
    * @returns The user 
    */
   get(userid) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       // Search for the user in the db
-      const query = {id : userid}
-      const options = {}
+      const query = {_id : userid}
+      const options = {projection : {password : 0}}
 
-      this.collection.find(query, options)
-        .then((user) => resolve(user))
-        .catch(() => resolve())
+      const users = await this.collection.find(query, options).toArray()
+
+      if(users.length < 1){
+        reject("Not found")
+      } else if (users.length > 1) {
+        reject("Two or more users found")
+      } else {
+        resolve(users[0])
+      }
     })
   }
 
@@ -66,13 +79,14 @@ class Users {
    * @returns True if exist
    */
   async exists(login) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const query = {login: login}
       const options = {}
 
-      this.collection.find(query, options)
-        .then((_) => resolve(true))
-        .catch((err) => reject(err))
+      const found = await this.collection.find(query, options)
+        .toArray()
+
+      resolve(found.length() > 0)
     })
   }
 
@@ -83,15 +97,16 @@ class Users {
    * @returns A Promise of the userid of the login and password combination if found
    */
   async checkpassword(login, password) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const query = {login: login, password: password}
       const options = {projection: {id: 1}}
 
-      const founds = this.collection.find(query, options)
+      const found = await this.collection.find(query, options).toArray()
+
+      resolve(found.length > 0)
     })
   }
-
 }
 
-exports.default = Users
+export default Users
 

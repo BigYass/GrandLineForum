@@ -1,16 +1,21 @@
-const express = require("express")
-const Users = require("./entities/users.js")
+import { Router, json } from "express"
+import Users from "./entities/users.js"
 
-function init() {
-  const router = express.Router()
-  router.use(express.json())
+/**
+ * @type {import('mongodb').Db}
+ */
+import db from './db.js'
+
+export default function init() {
+  const router = Router()
+  router.use(json())
 
   router.use((req, res, next) => {
     console.log("API: method %s, path %s", req.method, req.path)
     console.log("Body", req.body)
     next()
   })
-  const users = new Users.default()
+  const users = new Users(db)
   router.post("/user/login", async (req, res) => {
     try {
       const { login, password } = req.body
@@ -94,4 +99,3 @@ function init() {
 
   return router
 }
-exports.default = init

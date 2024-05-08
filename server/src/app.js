@@ -1,19 +1,17 @@
-const path = require('path')
-const api = require('./api.js')
-
-const config = require('./conf.js')
-
-const { MongoClient } = require("mongodb")
+import { normalize, dirname } from 'path'
+import db from './db.js'
+import api from './api.js'
+import config from './conf.js'
+import express from 'express'
 
 
 // Base directory
-const basedir = path.normalize(path.dirname(__dirname))
+const basedir = normalize(dirname(new URL(import.meta.url).pathname));
 console.debug(`Base directory: ${basedir}`)
 
 // Initialize express and express-session
-express = require('express')
 const app = express()
-const session = require("express-session")
+import session from "express-session"
 
 app.use(session({
     secret: "ota ass knee",
@@ -22,19 +20,13 @@ app.use(session({
 }))
 
 
-// Initiliaze mongodb
-const client = new MongoClient(config.database_url)
-
-client.connect()
-.then((client) => {
-  console.debug("Connecting to database : " + config.database_name)
-  app.use('/api', api.default())
-})
+app.use('/api', api())
 
 // Start the server
 app.on('close', () => {
 })
-exports.default = app
+
+export default app
 
 
 
