@@ -1,6 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
+  "description": "Backend du site GrandLineForum pour Sorbonne Université",
 
   "scripts": {
     "start": "node src/main.js"
