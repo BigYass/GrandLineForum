@@ -1,3 +1,5 @@
+import uuidv4 from 'uuid'
+
 class Users {
   
   /**
@@ -29,12 +31,14 @@ class Users {
         reject("Login " + login + " already exists")
       }
       else {
+
         const user = {
-          id : users.length() + 1,
+          uuid: uuidv4(),
           login: login,
           password: password,
+          firstname: firstname,
           lastname: lastname,
-          password: password,
+          active: true,
         }
 
         console.log("Creating : " + login)
@@ -99,11 +103,21 @@ class Users {
   async checkpassword(login, password) {
     return new Promise(async (resolve, reject) => {
       const query = {login: login, password: password}
-      const options = {projection: {id: 1}}
+      const options = {projection: {uuid: 1}}
 
       const found = await this.collection.find(query, options).toArray()
 
       resolve(found.length > 0)
+    })
+  }
+
+  async delete(userid) {
+    return new Promise(async (resolve, reject) => {
+      const query = {uuid: userid}
+
+      this.collection.deleteOne(query, {})
+        .then(value => resolve(value.deletedCount))
+        .catch(err => reject(err))
     })
   }
 }

@@ -73,7 +73,7 @@ export default function init() {
   })
 
   router
-    .route("/user/:user_id(\\d+)")
+    .route("/user/:user_id")
     .get(async (req, res) => {
       try {
         const user = await users.get(req.params.user_id)
